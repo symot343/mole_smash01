@@ -108,7 +108,7 @@ function drawList(){
     mole1ListY = [];
     for (let i=0;i<FIELD_SIZE;i++){
         for (let j=0;j<FIELD_SIZE;j++){
-            if ((grid[i][j] >= 1) && (grid[i][j] <= 10)) {
+            if ((grid[i][j] >= 1) && (grid[i][j] <= 20)) {
                 mole1ListX.push(i);
                 mole1ListY.push(j);
             }
@@ -137,7 +137,7 @@ document.getElementById("can").onclick = function(e){
     let clickY = e.clientY;
     let x = Math.floor(clickX/BLOCK_SIZE) - 1;
     let y = Math.floor(clickY/BLOCK_SIZE) - 1;
-    if ((grid[x][y]>=1)&&(grid[x][y]<=10)){
+    if ((grid[x][y]>=1)&&(grid[x][y]<=20)){
         grid[x][y]==0;
         score++;
         drawList();
@@ -165,10 +165,10 @@ document.getElementById("can").onclick = function(e){
 function nextGrid(){
     for (let i=0;i<FIELD_SIZE;i++){
         for (let j=0;j<FIELD_SIZE;j++){
-            if ((grid[i][j] >= 1) && (grid[i][j] < 10)) {
+            if ((grid[i][j] >= 1) && (grid[i][j] < 20)) {
                 grid[i][j]++;
             }
-            else if (grid[i][j]==10){
+            else if (grid[i][j]==20){
                 grid[i][j]=0;
             }
         }
