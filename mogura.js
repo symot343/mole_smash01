@@ -166,7 +166,7 @@ function handleClickOrTouch(e){
         console.log("yes");
     }else{
         attempt++;
-        smashSound[attempt%100].play();
+        //smashSound[attempt%100].play();
     }
 }
 
