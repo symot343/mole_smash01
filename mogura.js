@@ -22,6 +22,17 @@ let SHORT_SIDE;
 //バックグラウンドミュージック
 let backMusic = new Audio("Escort.mp3");
 
+//音源の定義
+let hitSound = []
+for (let i=0;i<100;i++){
+    hitSound.push(new Audio("hit.mp3"));
+}
+let smashSound = []
+for (let i = 0; i < 100; i++) {
+    smashSound.push(new Audio("smash.mp3"));
+}
+
+
 //画面のうち短い方の幅
 if (SCREEN_W < SCREEN_H) {
     SHORT_SIDE = SCREEN_W;
@@ -40,8 +51,12 @@ const MoleWait = 1000;
 const MolePhase = MoleWait/interval;
 const MoleBase = 1;
 
-//叩いた回数
+//当たった回数
 let score = 0;
+
+//叩いた回数
+let attempt = 0;
+
 
 //グリッドの様子
 let grid = new Array(FIELD_SIZE);
@@ -149,11 +164,10 @@ function handleClickOrTouch(e){
         grid[x][y] == 0;
         score++;
         drawAll();
-        //let hit = new Audio("hit.mp3");
-        //hit.play();
+        hitSound[score%100].play();
     }else{
-        //let smash = new Audio("smash.mp3");
-        //smash.play();
+        attempt++;
+        smashSound[attempt%100].play();
     }
 }
 
