@@ -28,7 +28,7 @@ for (let i=0;i<100;i++){
     hitSound.push(new Audio("hit.mp3"));
 }
 let smashSound = []
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 30; i++) {
     smashSound.push(new Audio("smash.mp3"));
 }
 
@@ -162,7 +162,7 @@ function handleClickOrTouch(e){
         grid[x][y] == 0;
         score++;
         drawAll();
-        hitSound[score%100].play();
+        hitSound[score%30].play();
         console.log("yes");
     }else{
         attempt++;
