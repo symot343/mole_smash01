@@ -95,9 +95,6 @@ mole1.onload = function () {
     drawImg(mole1,1,0);
 };
 
-grid[3][4] = 1;
-grid[4][5] = 1;
-
 //mole1を描くべきリスト
 let mole1ListX = []
 let mole1ListY = []
@@ -152,11 +149,11 @@ function handleClickOrTouch(e){
         grid[x][y] == 0;
         score++;
         drawAll();
-        let hit = new Audio("hit.mp3");
-        hit.play();
+        //let hit = new Audio("hit.mp3");
+        //hit.play();
     }else{
-        let smash = new Audio("smash.mp3");
-        smash.play();
+        //let smash = new Audio("smash.mp3");
+        //smash.play();
     }
 }
 
