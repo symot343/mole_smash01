@@ -94,8 +94,6 @@ mole1.src="mole1.png";
 function drawImg(img,x,y) {
     // 画像がロードされているか確認
     if (img.complete) {
-        // スムージングを有効化
-        con.imageSmoothingEnabled = true;
         // 画像をCanvasに描画
         con.drawImage(img,BLOCK_SIZE*(x+1),BLOCK_SIZE*(y+1), BLOCK_SIZE, BLOCK_SIZE);
     } else {
@@ -165,6 +163,7 @@ function handleClickOrTouch(e){
         score++;
         drawAll();
         hitSound[score%100].play();
+        console.log("yes");
     }else{
         attempt++;
         smashSound[attempt%100].play();
