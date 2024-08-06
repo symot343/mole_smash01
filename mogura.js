@@ -111,6 +111,9 @@ mole1.onload = function () {
     console.log("loaded")
 };
 
+//ゲーム時間は30秒
+let gameTime = 30000;
+
 //mole1を描くべきリスト
 let mole1ListX = []
 let mole1ListY = []
@@ -143,6 +146,11 @@ function drawStatus(){
     con.textAlign = "center";
     con.textBaseline = "middle";
     con.fillText(`Score:${score}`,can.width/2,MARGIN_SIZE/2);
+}
+
+//枠外に時間を表す石を並べる
+function drawTimer(){
+
 }
 
 function gameStart(){
@@ -227,12 +235,14 @@ function drawAll(){
     drawList();
     drawImages();
     drawStatus();
+    drawTimer();
 }
 
 function game(){
     if (backMusic.paused){
         backMusic.play();
     }
+    gameTime -= interval;
     nextGrid();
     emergeMole();
     drawAll();
