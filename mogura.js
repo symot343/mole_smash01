@@ -58,6 +58,8 @@ let score = 0;
 //叩いた回数
 let attempt = 0;
 
+//ゲームが始まっているかどうか
+let start = 0;
 
 //グリッドの様子
 let grid = new Array(FIELD_SIZE);
@@ -106,7 +108,7 @@ function drawImg(img,x,y) {
 }
 
 mole1.onload = function () {
-    drawImg(mole1,1,0);
+    console.log("loaded")
 };
 
 //mole1を描くべきリスト
@@ -143,10 +145,28 @@ function drawStatus(){
     con.fillText(`Score:${score}`,can.width/2,MARGIN_SIZE/2);
 }
 
+function gameStart(){
+    con.font = "30px Arial";
+    con.fillStyle = "white";
+    con.strokeStyle = "white";
+    con.textAlign = "center";
+    con.textBaseline = "middle";
+    con.fillText("GAME START", (BLOCK_SIZE * (FIELD_SIZE + 2)) / 2, (BLOCK_SIZE * (FIELD_SIZE + 1)) / 2);
+    //con.strokeText("GAME START", (BLOCK_SIZE * (FIELD_SIZE + 2)) / 2, (BLOCK_SIZE * (FIELD_SIZE + 1)) / 2);
+    con.font = "15px Arial";
+    con.fillStyle = "white";
+    con.textAlign = "right";
+    con.textBaseline = "middle";
+    con.fillText("push anywhere to start...",BLOCK_SIZE*(FIELD_SIZE+1),BLOCK_SIZE*(FIELD_SIZE));
+}
+
 can.addEventListener("click",handleClickOrTouch);
 can.addEventListener("touchstart",handleClickOrTouch);
 
 function handleClickOrTouch(e){
+    if (start==0){
+        setOfGame();
+    }
     e.preventDefault();
     const rect = can.getBoundingClientRect();
     let clickX,clickY;
@@ -218,6 +238,11 @@ function game(){
 }
 
 initialState();
-setInterval(game,interval);
+gameStart();
+
+function setOfGame(){
+    setInterval(game, interval);
+}
+
 
 
