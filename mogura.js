@@ -24,12 +24,13 @@ let backMusic = new Audio("Escort.mp3");
 
 //音源の定義
 let hitSound = []
-for (let i=0;i<100;i++){
+for (let i=0;i<10;i++){
     hitSound.push(new Audio("hit.mp3"));
 }
 let smashSound = []
-for (let i = 0; i < 30; i++) {
+for (let i = 0; i < 10; i++) {
     smashSound.push(new Audio("smash.mp3"));
+    smashSound.push("");
 }
 
 
@@ -162,11 +163,13 @@ function handleClickOrTouch(e){
         grid[x][y] == 0;
         score++;
         drawAll();
-        hitSound[score%30].play();
+        hitSound[score%10].play();
         console.log("yes");
     }else{
+        if (attempt%2===0){
+            smashSound[attempt%20].play();
+        }
         attempt++;
-        //smashSound[attempt%100].play();
     }
 }
 
