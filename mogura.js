@@ -112,6 +112,7 @@ mole1.onload = function () {
 };
 
 //ゲーム時間は30秒
+const gameLimit = 30000;
 let gameTime = 30000;
 
 //mole1を描くべきリスト
@@ -148,9 +149,21 @@ function drawStatus(){
     con.fillText(`Score:${score}`,can.width/2,MARGIN_SIZE/2);
 }
 
+//タイマー用の四角
+function drawSquare(y){
+    con.fillStyle = "white";
+    con.fillRect(MARGIN_SIZE*0.20,MARGIN_SIZE+BLOCK_SIZE*(y+0.1),MARGIN_SIZE*0.50,BLOCK_SIZE*0.50);
+    con.fillRect(MARGIN_SIZE*1.30+BLOCK_SIZE*FIELD_SIZE,MARGIN_SIZE+BLOCK_SIZE*(y+0.1),MARGIN_SIZE*0.50,BLOCK_SIZE*0.50);
+}
+
 //枠外に時間を表す石を並べる
 function drawTimer(){
-
+    con.clearRect(0,0,MARGIN_SIZE*0.80,can.height);
+    con.clearRect(MARGIN_SIZE*1.20+BLOCK_SIZE*FIELD_SIZE,0,MARGIN_SIZE*0.80,can.height);
+    let rest = gameTime/gameLimit;
+    con.fillStyle = "white";
+    con.fillRect(MARGIN_SIZE * 0.20, MARGIN_SIZE + (1-rest) * BLOCK_SIZE * FIELD_SIZE, MARGIN_SIZE * 0.50,rest*BLOCK_SIZE*FIELD_SIZE+BLOCK_SIZE*0.20);
+    con.fillRect(MARGIN_SIZE * 1.30 + BLOCK_SIZE * FIELD_SIZE, MARGIN_SIZE+(1-rest) * BLOCK_SIZE * FIELD_SIZE, MARGIN_SIZE * 0.50,rest*BLOCK_SIZE*FIELD_SIZE+BLOCK_SIZE*0.20);
 }
 
 function gameStart(){
@@ -189,7 +202,7 @@ function handleClickOrTouch(e){
     let x = Math.floor((clickX - MARGIN_SIZE) / BLOCK_SIZE);
     let y = Math.floor((clickY - MARGIN_SIZE) / BLOCK_SIZE);
     if ((grid[x][y] >= MoleBase) && (grid[x][y] <= MoleBase + MolePhase)) {
-        grid[x][y] == 0;
+        grid[x][y] = 0;
         score++;
         drawAll();
         hitSound[score%10].play();
@@ -232,10 +245,11 @@ function emergeMole(){
 }
 
 function drawAll(){
+    drawField();
+    drawTimer();
     drawList();
     drawImages();
     drawStatus();
-    drawTimer();
 }
 
 function game(){
@@ -243,9 +257,16 @@ function game(){
         backMusic.play();
     }
     gameTime -= interval;
+    console.log(gameTime);
     nextGrid();
     emergeMole();
     drawAll();
+    if (gameTime==0){
+        initialState();
+        gameStart();
+        gameTime=gameLimit;
+        start = 0;
+    }
 }
 
 initialState();
