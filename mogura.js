@@ -166,6 +166,7 @@ can.addEventListener("touchstart",handleClickOrTouch);
 function handleClickOrTouch(e){
     if (start==0){
         setOfGame();
+        start=1;
     }
     e.preventDefault();
     const rect = can.getBoundingClientRect();
