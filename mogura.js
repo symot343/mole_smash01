@@ -91,6 +91,11 @@ function drawField(){
 function initialState(){
     score = 0;
     gameTime = gameLimit;
+    for (let i = 0; i < FIELD_SIZE; i++) {
+        for (let j=0;j<FIELD_SIZE;j++){
+            grid[i][j] = 0;
+        }
+    }
     drawField();
     drawList();
     drawImages();
@@ -186,8 +191,12 @@ function drawResult(){
     con.strokeStyle = "white";
     con.textAlign = "center";
     con.textBaseline = "middle";
-    con.fillText("Result", (BLOCK_SIZE * (FIELD_SIZE + 2)) / 2, (BLOCK_SIZE*2+MARGIN_SIZE) );
-    afterGame = 0;
+    con.fillText("Result", (BLOCK_SIZE * (FIELD_SIZE + 2)) / 2, (BLOCK_SIZE*1.5) );
+    con.font = "18px Arial";
+    con.textAlign = "left";
+    con.fillText(`you killed...`,BLOCK_SIZE*(1.5),BLOCK_SIZE*2.5);
+    con.fillText(`${score} normal mole`,BLOCK_SIZE*2,BLOCK_SIZE*3.5);
+    afterGame = 2;
 }
 
 function gameStart(){
@@ -214,6 +223,13 @@ function handleClickOrTouch(e){
     }
     else if (afterGame==1){
         drawResult();
+        return;
+    }
+    else if (afterGame == 2) {
+        con.clearRect(0, 0, can.width, can.height);
+        initialState();
+        gameStart();
+        afterGame = 0;
         return;
     }
     else if (start==0){
@@ -308,7 +324,6 @@ function game(){
         backMusic.play();
     }
     gameTime -= interval;
-    console.log(gameTime);
     nextGrid();
     emergeMole();
     drawAll();
