@@ -29,8 +29,8 @@ for (let i=0;i<10;i++){
 }
 let smashSound = []
 for (let i = 0; i < 10; i++) {
-    smashSound.push(new Audio("smash.mp3"));
     smashSound.push("");
+    smashSound.push(new Audio("smash.mp3"));
 }
 
 
@@ -61,6 +61,12 @@ let attempt = 0;
 //ゲームが始まっているかどうか
 let start = 0;
 
+//結果を見る前かどうか
+let afterGame = 0;
+
+//touchを受け付けるか
+let accept = 1;
+
 //グリッドの様子
 let grid = new Array(FIELD_SIZE);
 for (let i=0;i<FIELD_SIZE;i++){
@@ -84,6 +90,7 @@ function drawField(){
 
 function initialState(){
     score = 0;
+    gameTime = gameLimit;
     drawField();
     drawList();
     drawImages();
@@ -112,8 +119,8 @@ mole1.onload = function () {
 };
 
 //ゲーム時間は30秒
-const gameLimit = 30000;
-let gameTime = 30000;
+const gameLimit = 10000;
+let gameTime = gameLimit;
 
 //mole1を描くべきリスト
 let mole1ListX = []
@@ -166,6 +173,23 @@ function drawTimer(){
     con.fillRect(MARGIN_SIZE * 1.30 + BLOCK_SIZE * FIELD_SIZE, MARGIN_SIZE+(1-rest) * BLOCK_SIZE * FIELD_SIZE, MARGIN_SIZE * 0.50,rest*BLOCK_SIZE*FIELD_SIZE+BLOCK_SIZE*0.20);
 }
 
+//結果の表示
+function drawResult(){
+    accept = 0;
+    setTimeout(function(){
+        accept=1;
+    },5000);
+    con.clearRect(0,0,can.width,can.height);
+    drawField();
+    con.font = "25px Arial";
+    con.fillStyle = "white";
+    con.strokeStyle = "white";
+    con.textAlign = "center";
+    con.textBaseline = "middle";
+    con.fillText("Result", (BLOCK_SIZE * (FIELD_SIZE + 2)) / 2, (BLOCK_SIZE*2+MARGIN_SIZE) );
+    afterGame = 0;
+}
+
 function gameStart(){
     con.font = "30px Arial";
     con.fillStyle = "white";
@@ -178,14 +202,21 @@ function gameStart(){
     con.fillStyle = "white";
     con.textAlign = "right";
     con.textBaseline = "middle";
-    con.fillText("push anywhere to start...",BLOCK_SIZE*(FIELD_SIZE+1),BLOCK_SIZE*(FIELD_SIZE));
+    con.fillText("press anywhere to start...",BLOCK_SIZE*(FIELD_SIZE+1),BLOCK_SIZE*(FIELD_SIZE));
 }
 
 can.addEventListener("click",handleClickOrTouch);
 can.addEventListener("touchstart",handleClickOrTouch);
 
 function handleClickOrTouch(e){
-    if (start==0){
+    if (accept==0){
+        return;
+    }
+    else if (afterGame==1){
+        drawResult();
+        return;
+    }
+    else if (start==0){
         setOfGame();
         start=1;
     }
@@ -208,7 +239,7 @@ function handleClickOrTouch(e){
         hitSound[score%10].play();
         console.log("yes");
     }else{
-        if (attempt%2===0){
+        if (attempt%2===1){
             smashSound[attempt%20].play();
         }
         attempt++;
@@ -252,6 +283,26 @@ function drawAll(){
     drawStatus();
 }
 
+function gameOver(){
+    start = 0;
+    con.clearRect(0,0,can.width,can.height);
+    drawField();
+    con.font = "30px Arial";
+    con.fillStyle = "white";
+    con.strokeStyle = "white";
+    con.textAlign = "center";
+    con.textBaseline = "middle";
+    con.fillText("GAME OVER", (BLOCK_SIZE * (FIELD_SIZE + 2)) / 2, (BLOCK_SIZE * (FIELD_SIZE + 1)) / 2);
+    con.font = "15px Arial";
+    con.fillStyle = "white";
+    con.textAlign = "right";
+    con.textBaseline = "middle";
+    con.fillText("press anywhere to see the result...", BLOCK_SIZE * (FIELD_SIZE + 1), BLOCK_SIZE * (FIELD_SIZE));
+    afterGame = 1;
+    backMusic.pause();
+    backMusic.currentTime = 0;
+}
+
 function game(){
     if (backMusic.paused){
         backMusic.play();
@@ -261,20 +312,23 @@ function game(){
     nextGrid();
     emergeMole();
     drawAll();
-    if (gameTime==0){
-        initialState();
-        gameStart();
-        gameTime=gameLimit;
-        start = 0;
-    }
 }
 
 initialState();
 gameStart();
 
 function setOfGame(){
-    setInterval(game, interval);
+    initialState();
+    gameStart();
+    let playGame = setInterval(() => {
+        game();
+    }, interval);
+    setTimeout(() => {
+        clearInterval(playGame);
+        gameOver();
+    }, gameLimit);
 }
+
 
 
 
