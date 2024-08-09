@@ -20,12 +20,16 @@ const FIELD_SIZE = 6;
 let SHORT_SIDE;
 
 //バックグラウンドミュージック
-let backMusic = new Audio("Escort.mp3");
+//let backMusic = new Audio("Escort.mp3");
 
 //音源の定義
 let hitSound = []
 for (let i=0;i<10;i++){
     hitSound.push(new Audio("hit.mp3"));
+}
+let metalSound = []
+for (let i = 0; i < 10; i++) {
+    metalSound.push(new Audio("metal.mp3"));
 }
 let smashSound = []
 for (let i = 0; i < 10; i++) {
@@ -46,11 +50,18 @@ const interval = 100;
 
 //モグラの出現頻度(1秒間に出現するモグラの量)
 let Mole = 8;
+let GMole = 1;
 
 //モグラの待機時間
 const MoleWait = 1000;
 const MolePhase = MoleWait/interval;
 const MoleBase = 1;
+let MoleCount = 0;
+
+const GoldMoleWait = 2500;
+const GoldMolePhase = GoldMoleWait/interval;
+const GoldMoleBase = 51;
+let GoldMoleCount = 0;
 
 //当たった回数
 let score = 0;
@@ -90,6 +101,8 @@ function drawField(){
 
 function initialState(){
     score = 0;
+    MoleCount = 0;
+    GoldMoleCount = 0;
     gameTime = gameLimit;
     for (let i = 0; i < FIELD_SIZE; i++) {
         for (let j=0;j<FIELD_SIZE;j++){
@@ -109,22 +122,24 @@ function initialState(){
 let mole1 = new Image();
 mole1.src="mole1.png";
 
+let goldMole = new Image();
+goldMole.src = "goldMole.png";
+
 // 画像を描画する関数
 function drawImg(img,x,y) {
     // 画像がロードされているか確認
     if (img.complete) {
         // 画像をCanvasに描画
         con.drawImage(img,BLOCK_SIZE*(x+1),BLOCK_SIZE*(y+1), BLOCK_SIZE, BLOCK_SIZE);
-    } else {
-        // 画像がロードされていない場合、ロードイベントで描画を呼び出す
-        mole1.onload = function () {
-            drawImg(mole1,x,y);
-        };
     }
 }
 
 mole1.onload = function () {
-    console.log("loaded")
+    console.log("mole1 loaded");
+};
+
+goldMole.onload = function (){
+    console.log("goldMole loaded");
 };
 
 //ゲーム時間は30秒
@@ -134,6 +149,9 @@ let gameTime = gameLimit;
 //mole1を描くべきリスト
 let mole1ListX = []
 let mole1ListY = []
+
+let goldMoleListX = []
+let goldMoleListY = []
 
 //mole1を書くべきリストを作る
 function drawList(){
@@ -147,12 +165,25 @@ function drawList(){
             }
         }
     }
+    goldMoleListX = [];
+    goldMoleListY = [];
+    for (let i = 0; i < FIELD_SIZE; i++) {
+        for (let j = 0; j < FIELD_SIZE; j++) {
+            if ((grid[i][j] >= GoldMoleBase) && (grid[i][j] <= GoldMoleBase + GoldMolePhase)) {
+                goldMoleListX.push(i);
+                goldMoleListY.push(j);
+            }
+        }
+    }
 }
 
 function drawImages(){
     con.clearRect(MARGIN_SIZE, MARGIN_SIZE, BLOCK_SIZE * FIELD_SIZE, BLOCK_SIZE * FIELD_SIZE)
     for (let i = 0; i < mole1ListX.length; i++) {
         drawImg(mole1, mole1ListX[i], mole1ListY[i]);
+    }
+    for (let i=0;i<goldMoleListX.length;i++){
+        drawImg(goldMole,goldMoleListX[i],goldMoleListY[i]);
     }
 }
 
@@ -255,10 +286,18 @@ function handleClickOrTouch(e){
     if ((grid[x][y] >= MoleBase) && (grid[x][y] <= MoleBase + MolePhase)) {
         grid[x][y] = 0;
         score++;
+        MoleCount++;
         drawAll();
         hitSound[score%10].play();
-        console.log("yes");
-    }else{
+        console.log("hit normal");
+    } else if ((grid[x][y] >= GoldMoleBase) && (grid[x][y] <= GoldMoleBase + GoldMolePhase)) {
+        grid[x][y] = 0;
+        score+=5;
+        GoldMoleCount++;
+        drawAll();
+        metalSound[score % 10].play();
+        console.log("hit gold");
+    } else{
         if (attempt%2===1){
             smashSound[attempt%20].play();
         }
@@ -271,11 +310,17 @@ function handleClickOrTouch(e){
 function nextGrid(){
     for (let i=0;i<FIELD_SIZE;i++){
         for (let j=0;j<FIELD_SIZE;j++){
-            if ((grid[i][j] >= MoleBase) && (grid[i][j] < MoleBase+MolePhase)) {
-                grid[i][j]++;
+            if (grid[i][j]==0){
+                continue;
             }
-            else if (grid[i][j]==MoleBase+MolePhase){
-                grid[i][j]=0;
+            else if (grid[i][j] == MoleBase + MolePhase) {
+                grid[i][j] = 0;
+            }
+            else if (grid[i][j] == GoldMoleBase + GoldMolePhase) {
+                grid[i][j] = 0;
+            }
+            else{
+                grid[i][j]++;
             }
         }
     }
@@ -288,7 +333,10 @@ function emergeMole(){
             if (grid[i][j]==0){
                 let num = Math.random();
                 if (num<=((Mole*(interval/1000))/(FIELD_SIZE*FIELD_SIZE))){
-                    grid[i][j]=1;
+                    grid[i][j]=MoleBase;
+                }
+                else if (num<=(((Mole+GMole)*(interval/1000))/(FIELD_SIZE*FIELD_SIZE))){
+                    grid[i][j] = GoldMoleBase;
                 }
             }
         }
@@ -319,8 +367,8 @@ function gameOver(){
     con.textBaseline = "middle";
     con.fillText("press anywhere to see the result...", BLOCK_SIZE * (FIELD_SIZE + 1), BLOCK_SIZE * (FIELD_SIZE));
     afterGame = 1;
-    backMusic.pause();
-    backMusic.currentTime = 0;
+    //backMusic.pause();
+    //backMusic.currentTime = 0;
     accept = 0;
     setTimeout(function () {
         accept = 1;
@@ -328,9 +376,9 @@ function gameOver(){
 }
 
 function game(){
-    if (backMusic.paused){
-        backMusic.play();
-    }
+    //if (backMusic.paused){
+    //    backMusic.play();
+    //}
     gameTime -= interval;
     nextGrid();
     emergeMole();
