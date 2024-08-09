@@ -50,7 +50,7 @@ const interval = 100;
 
 //モグラの出現頻度(1秒間に出現するモグラの量)
 let Mole = 8;
-let GMole = 1;
+let GMole = 0.7;
 
 //モグラの待機時間
 const MoleWait = 1000;
@@ -221,16 +221,28 @@ function drawResult(){
     },5000);
     con.clearRect(0,0,can.width,can.height);
     drawField();
-    con.font = "25px Arial";
+    con.font = `${BLOCK_SIZE*0.6}px Arial`;
     con.fillStyle = "white";
     con.strokeStyle = "white";
     con.textAlign = "center";
     con.textBaseline = "middle";
     con.fillText("Result", (BLOCK_SIZE * (FIELD_SIZE + 2)) / 2, (BLOCK_SIZE*1.5) );
-    con.font = "18px Arial";
+    con.font = `${BLOCK_SIZE*0.4}px Arial`;
     con.textAlign = "left";
     con.fillText(`you killed...`,BLOCK_SIZE*(1.5),BLOCK_SIZE*2.5);
-    con.fillText(`${score} normal mole`,BLOCK_SIZE*2,BLOCK_SIZE*3.5);
+    con.textAlign = "center";
+    con.fillText(`${MoleCount}`,BLOCK_SIZE*2,BLOCK_SIZE*3.5);
+    con.fillText(`${GoldMoleCount}`, BLOCK_SIZE * 2, BLOCK_SIZE * 4);
+    con.fillText(`x1`, BLOCK_SIZE * 3, BLOCK_SIZE * 3.5);
+    con.fillText(`x5`, BLOCK_SIZE * 3, BLOCK_SIZE * 4);
+    con.textAlign = "left";
+    con.fillText(`normal mole`,BLOCK_SIZE*4,BLOCK_SIZE*3.5);
+    con.fillText(`gold mole`,BLOCK_SIZE*4,BLOCK_SIZE*4);
+    con.font = `${BLOCK_SIZE * 0.5}px Arial`;
+    con.fillText(`your score is...`, BLOCK_SIZE * (1.5), BLOCK_SIZE * 6);
+    con.font = `${BLOCK_SIZE * 1.2}px Arial`;
+    con.textAlign = "right";
+    con.fillText(`${score}`,BLOCK_SIZE*6.5,BLOCK_SIZE*6);
     afterGame = 2;
 }
 
