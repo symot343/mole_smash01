@@ -99,6 +99,10 @@ function initialState(){
     drawField();
     drawList();
     drawImages();
+    accept = 0;
+    setTimeout(function () {
+        accept = 1;
+    }, 1000);
 }
 
 //モグラ1の定義
