@@ -317,6 +317,10 @@ function gameOver(){
     afterGame = 1;
     backMusic.pause();
     backMusic.currentTime = 0;
+    accept = 0;
+    setTimeout(function () {
+        accept = 1;
+    }, 2000);
 }
 
 function game(){
