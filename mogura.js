@@ -58,7 +58,7 @@ const MolePhase = MoleWait/interval;
 const MoleBase = 1;
 let MoleCount = 0;
 
-const GoldMoleWait = 2500;
+const GoldMoleWait = 2000;
 const GoldMolePhase = GoldMoleWait/interval;
 const GoldMoleBase = 51;
 let GoldMoleCount = 0;
@@ -143,7 +143,7 @@ goldMole.onload = function (){
 };
 
 //ゲーム時間は30秒
-const gameLimit = 10000;
+const gameLimit = 15000;
 let gameTime = gameLimit;
 
 //mole1を描くべきリスト
