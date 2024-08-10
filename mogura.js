@@ -1,6 +1,11 @@
 let can = document.getElementById("can");
 let con = can.getContext("2d");
 
+const inputText = document.getElementById("input-text");
+
+//プレーヤー名前
+let NAME = "guest";
+
 //画面サイズ
 const SCREEN_W = window.innerWidth;
 const SCREEN_H = window.innerHeight;
@@ -88,6 +93,10 @@ for (let i=0;i<FIELD_SIZE;i++){
 //ブロックサイズ，マージンサイズ
 const BLOCK_SIZE = SHORT_SIDE/(FIELD_SIZE+2);
 const MARGIN_SIZE = BLOCK_SIZE;
+
+//input boxの位置
+inputText.style.left = `${(BLOCK_SIZE * (FIELD_SIZE + 2) / 2)-81}px`;
+inputText.style.top = `${BLOCK_SIZE * (FIELD_SIZE + 2) / 2}px`;
 
 //フィールドをかく
 function drawField(){
@@ -229,7 +238,7 @@ function drawResult(){
     con.fillText("Result", (BLOCK_SIZE * (FIELD_SIZE + 2)) / 2, (BLOCK_SIZE*1.5) );
     con.font = `${BLOCK_SIZE*0.4}px Arial`;
     con.textAlign = "left";
-    con.fillText(`you killed...`,BLOCK_SIZE*(1.5),BLOCK_SIZE*2.5);
+    con.fillText(`${NAME} killed...`,BLOCK_SIZE*(1.5),BLOCK_SIZE*2.5);
     con.textAlign = "center";
     con.fillText(`${MoleCount}`,BLOCK_SIZE*2,BLOCK_SIZE*3.5);
     con.fillText(`${GoldMoleCount}`, BLOCK_SIZE * 2, BLOCK_SIZE * 4);
@@ -247,6 +256,7 @@ function drawResult(){
 }
 
 function gameStart(){
+    inputText.style.zIndex=1;
     con.font = "30px Arial";
     con.fillStyle = "white";
     con.strokeStyle = "white";
@@ -260,6 +270,12 @@ function gameStart(){
     con.textBaseline = "middle";
     con.fillText("press anywhere to start...",BLOCK_SIZE*(FIELD_SIZE+1),BLOCK_SIZE*(FIELD_SIZE));
 }
+
+//inputboxの入力を受け取る
+inputText.addEventListener('input',()=>{
+    NAME = inputText.value;
+});
+
 
 can.addEventListener("click",handleClickOrTouch);
 can.addEventListener("touchstart",handleClickOrTouch);
@@ -281,6 +297,7 @@ function handleClickOrTouch(e){
     }
     else if (start==0){
         setOfGame();
+        inputText.style.zIndex=-1;
         start=1;
     }
     e.preventDefault();
