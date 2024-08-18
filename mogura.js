@@ -222,6 +222,7 @@ function drawTimer(){
     con.fillRect(MARGIN_SIZE * 1.30 + BLOCK_SIZE * FIELD_SIZE, MARGIN_SIZE+(1-rest) * BLOCK_SIZE * FIELD_SIZE, MARGIN_SIZE * 0.50,rest*BLOCK_SIZE*FIELD_SIZE+BLOCK_SIZE*0.20);
 }
 
+
 //結果の表示
 function drawResult(){
     accept = 0;
@@ -238,6 +239,9 @@ function drawResult(){
     con.fillText("Result", (BLOCK_SIZE * (FIELD_SIZE + 2)) / 2, (BLOCK_SIZE*1.5) );
     con.font = `${BLOCK_SIZE*0.4}px Arial`;
     con.textAlign = "left";
+    if (NAME==""){
+        NAME="guest";
+    }
     con.fillText(`${NAME} killed...`,BLOCK_SIZE*(1.5),BLOCK_SIZE*2.5);
     con.textAlign = "center";
     con.fillText(`${MoleCount}`,BLOCK_SIZE*2,BLOCK_SIZE*3.5);
@@ -380,6 +384,8 @@ function drawAll(){
     drawStatus();
 }
 
+
+
 function gameOver(){
     start = 0;
     con.clearRect(0,0,can.width,can.height);
@@ -399,6 +405,20 @@ function gameOver(){
     //backMusic.pause();
     //backMusic.currentTime = 0;
     accept = 0;
+    fetch('https://script.google.com/macros/s/AKfycby0Aiko5ulQ8mHkythngN9uUInlkguDRIz8jL-r4ae6q8grFrvYDhOCZRvS4_daIerB9g/exec', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ NAME, score })
+    })
+        .then(response => response.text())
+        .then(data => {
+            alert('Score submitted successfully!');
+        });
+
+
+
     setTimeout(function () {
         accept = 1;
     }, 2000);
