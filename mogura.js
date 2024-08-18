@@ -405,12 +405,14 @@ function gameOver(){
     //backMusic.pause();
     //backMusic.currentTime = 0;
     accept = 0;
+    const name = NAME;
     fetch('https://script.google.com/macros/s/AKfycby0Aiko5ulQ8mHkythngN9uUInlkguDRIz8jL-r4ae6q8grFrvYDhOCZRvS4_daIerB9g/exec', {
         method: 'POST',
+        mode: 'no-cors',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ NAME, score })
+        body: JSON.stringify({ name, score })
     })
         .then(response => response.text())
         .then(data => {
