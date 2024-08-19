@@ -10,6 +10,8 @@ let NAME = "guest";
 const SCREEN_W = window.innerWidth;
 const SCREEN_H = window.innerHeight;
 
+let ranking = {};
+
 //背景黒設定
 can.width = SCREEN_W;
 can.height = SCREEN_H;
@@ -82,6 +84,7 @@ let afterGame = 0;
 
 //touchを受け付けるか
 let accept = 1;
+
 
 //グリッドの様子
 let grid = new Array(FIELD_SIZE);
@@ -228,7 +231,7 @@ function drawResult(){
     accept = 0;
     setTimeout(function(){
         accept=1;
-    },5000);
+    },3000);
     con.clearRect(0,0,can.width,can.height);
     drawField();
     con.font = `${BLOCK_SIZE*0.6}px Arial`;
@@ -259,6 +262,30 @@ function drawResult(){
     afterGame = 2;
 }
 
+function drawRanking(){
+    accept=0;
+    setTimeout(function () {
+        accept = 1;
+    }, 5000);
+    con.clearRect(0, 0, can.width, can.height);
+    drawField();
+    con.font = `${BLOCK_SIZE * 0.6}px Arial`;
+    con.fillStyle = "white";
+    con.strokeStyle = "white";
+    con.textAlign = "center";
+    con.textBaseline = "middle";
+    con.fillText("Leader Board", (BLOCK_SIZE * (FIELD_SIZE + 2)) / 2, (BLOCK_SIZE * 1.5));
+    for (let i=0;i<10;i++){
+        con.font = `${BLOCK_SIZE * 0.4}px Arial`;
+        con.fillText(`${i+1}`, BLOCK_SIZE * 1.8, BLOCK_SIZE * (2.2 + 0.5 * i));
+        con.font = `${BLOCK_SIZE * 0.3}px Arial`;
+        con.fillText(`${ranking[i].name}`, BLOCK_SIZE * 3.5, BLOCK_SIZE * (2.2+0.5*i));
+        con.font = `${BLOCK_SIZE * 0.4}px Arial`;
+        con.fillText(`${ranking[i].score}`, BLOCK_SIZE * 6.0, BLOCK_SIZE * (2.2+0.5*i));
+    }
+    afterGame=3;
+}
+
 function gameStart(){
     inputText.style.zIndex=1;
     con.font = "30px Arial";
@@ -285,6 +312,7 @@ can.addEventListener("click",handleClickOrTouch);
 can.addEventListener("touchstart",handleClickOrTouch);
 
 function handleClickOrTouch(e){
+    console.log(afterGame);
     if (accept==0){
         return;
     }
@@ -292,7 +320,10 @@ function handleClickOrTouch(e){
         drawResult();
         return;
     }
-    else if (afterGame == 2) {
+    else if (afterGame==2){
+        drawRanking();
+    }
+    else if (afterGame == 3) {
         con.clearRect(0, 0, can.width, can.height);
         initialState();
         gameStart();
@@ -418,8 +449,15 @@ function gameOver(){
         .then(data => {
             alert('Score submitted successfully!');
         });
-
-
+    
+    fetch('https://script.google.com/macros/s/AKfycby0Aiko5ulQ8mHkythngN9uUInlkguDRIz8jL-r4ae6q8grFrvYDhOCZRvS4_daIerB9g/exec')
+        .then(response => response.json())
+        .then(data => {
+            data.sort((a, b) => b.score - a.score);
+            console.log(data); // シートのデータがJSON形式で表示されます
+            ranking = data;
+        })
+        .catch(error => console.error('Error fetching data:', error));
 
     setTimeout(function () {
         accept = 1;
