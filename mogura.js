@@ -279,7 +279,7 @@ function drawRanking(){
         con.font = `${BLOCK_SIZE * 0.4}px Arial`;
         con.fillText(`${i+1}`, BLOCK_SIZE * 1.8, BLOCK_SIZE * (2.2 + 0.5 * i));
         con.font = `${BLOCK_SIZE * 0.3}px Arial`;
-        con.fillText(`${ranking[i].name}`, BLOCK_SIZE * 3.5, BLOCK_SIZE * (2.2+0.5*i));
+        con.fillText(`${ranking[i].name}`, BLOCK_SIZE * 3.9, BLOCK_SIZE * (2.2+0.5*i));
         con.font = `${BLOCK_SIZE * 0.4}px Arial`;
         con.fillText(`${ranking[i].score}`, BLOCK_SIZE * 6.0, BLOCK_SIZE * (2.2+0.5*i));
     }
@@ -312,7 +312,6 @@ can.addEventListener("click",handleClickOrTouch);
 can.addEventListener("touchstart",handleClickOrTouch);
 
 function handleClickOrTouch(e){
-    console.log(afterGame);
     if (accept==0){
         return;
     }
