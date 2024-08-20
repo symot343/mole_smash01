@@ -92,6 +92,14 @@ for (let i=0;i<FIELD_SIZE;i++){
     grid[i] = new Array(FIELD_SIZE).fill(0);
 }
 
+fetch('https://script.google.com/macros/s/AKfycby0Aiko5ulQ8mHkythngN9uUInlkguDRIz8jL-r4ae6q8grFrvYDhOCZRvS4_daIerB9g/exec')
+    .then(response => response.json())
+    .then(data => {
+        data.sort((a, b) => b.score - a.score);
+        console.log(data); // シートのデータがJSON形式で表示されます
+        ranking = data;
+    })
+    .catch(error => console.error('Error fetching data:', error));
 
 //ブロックサイズ，マージンサイズ
 const BLOCK_SIZE = SHORT_SIDE/(FIELD_SIZE+2);
@@ -245,6 +253,8 @@ function drawResult(){
     if (NAME==""){
         NAME="guest";
     }
+    ranking.sort((a, b) => b.score - a.score);
+    let index = ranking.findIndex(rank => rank.score == score);
     con.fillText(`${NAME} killed...`,BLOCK_SIZE*(1.5),BLOCK_SIZE*2.5);
     con.textAlign = "center";
     con.fillText(`${MoleCount}`,BLOCK_SIZE*2,BLOCK_SIZE*3.5);
@@ -259,6 +269,9 @@ function drawResult(){
     con.font = `${BLOCK_SIZE * 1.2}px Arial`;
     con.textAlign = "right";
     con.fillText(`${score}`,BLOCK_SIZE*6.5,BLOCK_SIZE*6);
+    con.textAlign = "center";
+    con.font = `${BLOCK_SIZE*0.3}px Arial`;
+    con.fillText(`${ranking.length}人中${index+1}位`,BLOCK_SIZE*4,BLOCK_SIZE*6.7);
     afterGame = 2;
 }
 
@@ -439,6 +452,7 @@ function gameOver(){
     //backMusic.currentTime = 0;
     accept = 0;
     const name = NAME;
+    ranking.push({date:"now",name:NAME,score:score})
     fetch('https://script.google.com/macros/s/AKfycby0Aiko5ulQ8mHkythngN9uUInlkguDRIz8jL-r4ae6q8grFrvYDhOCZRvS4_daIerB9g/exec', {
         method: 'POST',
         mode: 'no-cors',
@@ -451,16 +465,6 @@ function gameOver(){
         .then(data => {
             alert('Score submitted successfully!');
         });
-    
-    fetch('https://script.google.com/macros/s/AKfycby0Aiko5ulQ8mHkythngN9uUInlkguDRIz8jL-r4ae6q8grFrvYDhOCZRvS4_daIerB9g/exec')
-        .then(response => response.json())
-        .then(data => {
-            data.sort((a, b) => b.score - a.score);
-            console.log(data); // シートのデータがJSON形式で表示されます
-            ranking = data;
-        })
-        .catch(error => console.error('Error fetching data:', error));
-
     setTimeout(function () {
         accept = 1;
     }, 2000);
