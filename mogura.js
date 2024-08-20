@@ -283,6 +283,9 @@ function drawRanking(){
         con.font = `${BLOCK_SIZE * 0.4}px Arial`;
         con.fillText(`${ranking[i].score}`, BLOCK_SIZE * 6.0, BLOCK_SIZE * (2.2+0.5*i));
     }
+    con.textAlign = "right"
+    con.font = `${BLOCK_SIZE * 0.3}px Arial`;
+    con.fillText(`みんなのプレイ回数：${ranking.length}`, BLOCK_SIZE * 7.0, BLOCK_SIZE * 0.5);
     afterGame=3;
 }
 
