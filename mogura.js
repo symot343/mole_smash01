@@ -1,6 +1,9 @@
 let can = document.getElementById("can");
 let con = can.getContext("2d");
 
+let angry_can = document.getElementById("angry_can");
+let angry_con = angry_can.getContext("2d");
+
 const inputText = document.getElementById("input-text");
 
 //プレーヤー名前
@@ -19,6 +22,14 @@ can.style = "background-color:#000000"
 //キャンバスの画質向上
 con.imageSmoothingEnabled = true;
 con.imageSmoothingQuality = 'high';
+
+//背景黒設定
+angry_can.width = SCREEN_W;
+angry_can.height = SCREEN_H;
+angry_can.style = "background-color:#000000"
+//キャンバスの画質向上
+angry_con.imageSmoothingEnabled = true;
+angry_con.imageSmoothingQuality = 'high';
 
 //フィールドサイズ
 const FIELD_SIZE = 6;
@@ -123,6 +134,7 @@ function initialState(){
     score = 0;
     MoleCount = 0;
     GoldMoleCount = 0;
+    angry_rate = 0;
     gameTime = gameLimit;
     for (let i = 0; i < FIELD_SIZE; i++) {
         for (let j=0;j<FIELD_SIZE;j++){
@@ -145,6 +157,9 @@ mole1.src="mole1.png";
 let goldMole = new Image();
 goldMole.src = "goldMole.png";
 
+let angryMole = new Image();
+angryMole.src = "angryMole.png";
+
 // 画像を描画する関数
 function drawImg(img,x,y) {
     // 画像がロードされているか確認
@@ -161,6 +176,10 @@ mole1.onload = function () {
 goldMole.onload = function (){
     console.log("goldMole loaded");
 };
+
+angryMole.onload = function (){
+    console.log("angryMole loaded");
+}
 
 //ゲーム時間は30秒
 const gameLimit = 15000;
@@ -233,6 +252,29 @@ function drawTimer(){
     con.fillRect(MARGIN_SIZE * 1.30 + BLOCK_SIZE * FIELD_SIZE, MARGIN_SIZE+(1-rest) * BLOCK_SIZE * FIELD_SIZE, MARGIN_SIZE * 0.50,rest*BLOCK_SIZE*FIELD_SIZE+BLOCK_SIZE*0.20);
 }
 
+angry_rate = 0;
+
+function drawAngry(){
+    angry_con.clearRect(0, 0, can.width, can.height);
+    angry_size = BLOCK_SIZE*(1+angry_rate/10);
+    angry_con.drawImage(angryMole,BLOCK_SIZE*4-angry_size/2,BLOCK_SIZE*4-angry_size/2,angry_size,angry_size);
+    angry_con.strokeStyle = "white";
+    angry_con.lineWidth = 2;
+    angry_con.strokeRect(MARGIN_SIZE, MARGIN_SIZE, BLOCK_SIZE * FIELD_SIZE, BLOCK_SIZE * FIELD_SIZE);
+    angry_con.lineWidth = 3;
+    angry_con.strokeRect(MARGIN_SIZE * 0.85, MARGIN_SIZE * 0.85, BLOCK_SIZE * (FIELD_SIZE + 0.30), BLOCK_SIZE * (FIELD_SIZE + 0.30));
+}
+
+function drawNormal() {
+    con.clearRect(0, 0, can.width, can.height);
+    angry_size = BLOCK_SIZE * (1 + angry_rate / 10);
+    con.drawImage(mole1, BLOCK_SIZE * 4 - angry_size / 2, BLOCK_SIZE * 4 - angry_size / 2, angry_size, angry_size);
+    con.strokeStyle = "white";
+    con.lineWidth = 2;
+    con.strokeRect(MARGIN_SIZE, MARGIN_SIZE, BLOCK_SIZE * FIELD_SIZE, BLOCK_SIZE * FIELD_SIZE);
+    con.lineWidth = 3;
+    con.strokeRect(MARGIN_SIZE * 0.85, MARGIN_SIZE * 0.85, BLOCK_SIZE * (FIELD_SIZE + 0.30), BLOCK_SIZE * (FIELD_SIZE + 0.30));
+}
 
 //結果の表示
 function drawResult(){
@@ -261,7 +303,11 @@ function drawResult(){
     con.fillText(`${GoldMoleCount}`, BLOCK_SIZE * 2, BLOCK_SIZE * 4);
     con.fillText(`x1`, BLOCK_SIZE * 3, BLOCK_SIZE * 3.5);
     con.fillText(`x5`, BLOCK_SIZE * 3, BLOCK_SIZE * 4);
+    con.fillText(`boss bonus:`, BLOCK_SIZE * 3, BLOCK_SIZE * 5);
+    con.font = `${BLOCK_SIZE*0.5}px Arial`;
+    con.fillText(`x${(10+angry_rate)/10}`, BLOCK_SIZE * 5, BLOCK_SIZE * 5);
     con.textAlign = "left";
+    con.gont = `${BLOCK_SIZE * 0.4}px Arial`;
     con.fillText(`normal mole`,BLOCK_SIZE*4,BLOCK_SIZE*3.5);
     con.fillText(`gold mole`,BLOCK_SIZE*4,BLOCK_SIZE*4);
     con.font = `${BLOCK_SIZE * 0.5}px Arial`;
@@ -384,6 +430,26 @@ function handleClickOrTouch(e){
     }
 }
 
+angry_can.addEventListener("click", angry_handleClickOrTouch);
+angry_can.addEventListener("touchstart", angry_handleClickOrTouch);
+
+function angry_handleClickOrTouch(e){
+    angry_rate++;
+    drawAngry();
+}
+
+function angryGame(){
+    angry_can.style.zIndex = '2';
+    drawAngry();
+    setTimeout(() => {
+        con.clearRect(0, 0, can.width, can.height);
+        angry_can.style.zIndex='-1';
+        drawNormal();
+        setTimeout(() => {
+            gameOver();
+        }, 1000)
+    }, 3000);
+}
 
 //グリッドのモグラの状態を変化させる
 function nextGrid(){
@@ -431,9 +497,11 @@ function drawAll(){
 }
 
 
-
 function gameOver(){
     start = 0;
+    score *= (10+angry_rate)/10;
+    score = Math.floor(score);
+    console.log(score);
     con.clearRect(0,0,can.width,can.height);
     drawField();
     con.font = "30px Arial";
@@ -491,7 +559,7 @@ function setOfGame(){
     }, interval);
     setTimeout(() => {
         clearInterval(playGame);
-        gameOver();
+        angryGame();
     }, gameLimit);
 }
 
