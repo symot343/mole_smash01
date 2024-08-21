@@ -182,7 +182,7 @@ angryMole.onload = function (){
 }
 
 //ゲーム時間は30秒
-const gameLimit = 15000;
+const gameLimit = 12000;
 let gameTime = gameLimit;
 
 //mole1を描くべきリスト
@@ -263,6 +263,11 @@ function drawAngry(){
     angry_con.strokeRect(MARGIN_SIZE, MARGIN_SIZE, BLOCK_SIZE * FIELD_SIZE, BLOCK_SIZE * FIELD_SIZE);
     angry_con.lineWidth = 3;
     angry_con.strokeRect(MARGIN_SIZE * 0.85, MARGIN_SIZE * 0.85, BLOCK_SIZE * (FIELD_SIZE + 0.30), BLOCK_SIZE * (FIELD_SIZE + 0.30));
+    angry_con.font = `${BLOCK_SIZE*0.5}px Arial`;
+    angry_con.fillStyle = "white";
+    angry_con.textAlign = "center";
+    angry_con.textBaseline = "middle";
+    angry_con.fillText(`叩きまくれ！`, BLOCK_SIZE*4, BLOCK_SIZE*0.5);
 }
 
 function drawNormal() {
