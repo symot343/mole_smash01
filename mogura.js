@@ -418,18 +418,18 @@ function handleClickOrTouch(e){
         score++;
         MoleCount++;
         drawAll();
-        hitSound[score%10].play();
+        //hitSound[score%10].play();
         console.log("hit normal");
     } else if ((grid[x][y] >= GoldMoleBase) && (grid[x][y] <= GoldMoleBase + GoldMolePhase)) {
         grid[x][y] = 0;
         score+=5;
         GoldMoleCount++;
         drawAll();
-        metalSound[score % 10].play();
+        //metalSound[score % 10].play();
         console.log("hit gold");
     } else{
         if (attempt%2===1){
-            smashSound[attempt%20].play();
+            //smashSound[attempt%20].play();
         }
         attempt++;
     }
