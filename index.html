@@ -21,6 +21,22 @@
             height: 100vh;
             /* ビューポートの高さに合わせる */
         }
+        #soundButton{
+            position:absolute;
+            z-index:2;
+            padding:3px 5px;
+            font-size:10px;
+            cursor:pointer;
+            pointer-events:auto;
+        }
+        .on{
+            background-color:green;
+            color:white;
+        }
+        .off{
+            background-color:red;
+            color:white;
+        }
         #input-text{
             position:absolute;
             z-index:1;
@@ -45,6 +61,7 @@
         
     </style>
     <div id="canvas-container">
+        <button id="soundButton" class="off">OFF</button>
         <input type="text" id="input-text" placeholder="Enter text">
         <canvas id="can"></canvas>
         <canvas id="angry_can"></canvas>

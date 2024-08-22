@@ -6,6 +6,23 @@ let angry_con = angry_can.getContext("2d");
 
 const inputText = document.getElementById("input-text");
 
+const soundButton = document.getElementById("soundButton");
+let isOn = false;
+
+soundButton.addEventListener('click',function(){
+    isOn = !isOn;
+    console.log("yes");
+    if (isOn){
+        soundButton.textContent = 'ON';
+        soundButton.classList.remove('off');
+        soundButton.classList.add('on');
+    }else{
+        soundButton.textContent = 'OFF';
+        soundButton.classList.remove('on');
+        soundButton.classList.add('off');
+    }
+});
+
 //プレーヤー名前
 let NAME = "guest";
 
@@ -119,6 +136,9 @@ const MARGIN_SIZE = BLOCK_SIZE;
 //input boxの位置
 inputText.style.left = `${(BLOCK_SIZE * (FIELD_SIZE + 2) / 2)-81}px`;
 inputText.style.top = `${BLOCK_SIZE * (FIELD_SIZE + 2) / 2}px`;
+
+soundButton.style.left = `${BLOCK_SIZE*6}px`;
+soundButton.style.top = `${BLOCK_SIZE-20}px`;
 
 //フィールドをかく
 function drawField(){
