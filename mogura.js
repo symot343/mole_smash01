@@ -138,7 +138,7 @@ inputText.style.left = `${(BLOCK_SIZE * (FIELD_SIZE + 2) / 2)-81}px`;
 inputText.style.top = `${BLOCK_SIZE * (FIELD_SIZE + 2) / 2}px`;
 
 soundButton.style.left = `${BLOCK_SIZE*6}px`;
-soundButton.style.top = `${BLOCK_SIZE-20}px`;
+soundButton.style.top = `${BLOCK_SIZE*0.6}px`;
 
 //フィールドをかく
 function drawField(){
@@ -438,18 +438,24 @@ function handleClickOrTouch(e){
         score++;
         MoleCount++;
         drawAll();
-        //hitSound[score%10].play();
+        if (isOn){
+            hitSound[score%10].play();
+        }
         console.log("hit normal");
     } else if ((grid[x][y] >= GoldMoleBase) && (grid[x][y] <= GoldMoleBase + GoldMolePhase)) {
         grid[x][y] = 0;
         score+=5;
         GoldMoleCount++;
         drawAll();
-        //metalSound[score % 10].play();
+        if (isOn){
+            metalSound[score % 10].play();
+        }
         console.log("hit gold");
     } else{
         if (attempt%2===1){
-            //smashSound[attempt%20].play();
+            if (isOn){
+                smashSound[attempt%20].play();
+            }
         }
         attempt++;
     }
