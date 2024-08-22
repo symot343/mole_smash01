@@ -317,7 +317,7 @@ function drawResult(){
     con.fillText(`gold mole`,BLOCK_SIZE*4,BLOCK_SIZE*4);
     con.font = `${BLOCK_SIZE * 0.5}px Arial`;
     con.fillText(`your score is...`, BLOCK_SIZE * (1.5), BLOCK_SIZE * 6);
-    con.font = `${BLOCK_SIZE * 1.2}px Arial`;
+    con.font = `${BLOCK_SIZE * 0.8}px Arial`;
     con.textAlign = "right";
     con.fillText(`${score}`,BLOCK_SIZE*6.5,BLOCK_SIZE*6);
     con.textAlign = "center";
