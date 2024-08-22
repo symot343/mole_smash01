@@ -375,6 +375,7 @@ function drawRanking(){
 
 function gameStart(){
     inputText.style.zIndex=1;
+    soundButton.style.zIndex=1;
     con.font = "30px Arial";
     con.fillStyle = "white";
     con.strokeStyle = "white";
@@ -419,6 +420,7 @@ function handleClickOrTouch(e){
     else if (start==0){
         setOfGame();
         inputText.style.zIndex=-1;
+        soundButton.style.zIndex=-1;
         start=1;
     }
     e.preventDefault();
